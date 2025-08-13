@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jörg's Legal English Adventure</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Dosis:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #E0E7FF;
+            color: #1F2937;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #A5B4FC, #818CF8);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'Dosis', sans-serif;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-top: 10px;
+            color: #fff;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: row;
+            padding: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .adventure-area {
+            flex: 2;
+            min-width: 400px;
+            background: #F3F4F6;
+            padding: 20px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .adventure-header {
+            font-family: 'Dosis', sans-serif;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #6366F1;
+        }
+
+        .adventure-scenario {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #4B5563;
+        }
+        
+        .user-controls {
+            flex: 1;
+            min-width: 300px;
+            background: #E5E7EB;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .decision-section {
+            margin-top: 20px;
+        }
+
+        .decision-section h3 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #4B5563;
+        }
+
+        .decision-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option-card {
+            background: #D1D5DB;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+            line-height: 1.4;
+            color: #1F2937;
+        }
+        
+        .option-card.incorrect {
+            opacity: 0.3;
+            pointer-events: none;
+            background: #D1D5DB;
+        }
+        
+        .option-card.correct {
+            background: #4F46E5;
+            border: 2px solid #818CF8;
+            color: #fff;
+            animation: pulse-purple 1s infinite;
+        }
+        
+        @keyframes pulse-purple {
+            0% { box-shadow: 0 0 5px #818CF8; }
+            50% { box-shadow: 0 0 15px #818CF8; }
+            100% { box-shadow: 0 0 5px #818CF8; }
+        }
+
+        .option-card:hover:not(.incorrect) {
+            background: #BCC2CC;
+            transform: translateY(-2px);
+        }
+        
+        .option-card.selected {
+            background: #6366F1;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+        
+        .option-card.correct.selected {
+            background: #4F46E5;
+        }
+
+        .adventure-dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #D1D5DB;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-family: 'Dosis', sans-serif;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #4F46E5;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn-primary {
+            background: #6366F1;
+            color: #fff;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #4F46E5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary:disabled {
+            background: #6366f188;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #D1D5DB;
+            color: #1F2937;
+            border: 1px solid #9CA3AF;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #BCC2CC;
+        }
+        
+        .btn-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-llm {
+            background: #F472B6;
+            color: #fff;
+        }
+        
+        .btn-llm:hover:not(:disabled) {
+            background: #EC4899;
+        }
+        
+        .btn-llm:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            text-align: left;
+            animation: slideInFromTop 0.5s ease-out;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-title {
+            font-family: 'Dosis', sans-serif;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #4F46E5;
+        }
+
+        .modal-text {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #4B5563;
+        }
+
+        .loading-text {
+            text-align: center;
+            font-style: italic;
+            color: #9CA3AF;
+        }
+        
+        .llm-advice-content h4 {
+            font-family: 'Dosis', sans-serif;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #6366F1;
+        }
+
+        .llm-advice-content p {
+            margin-bottom: 10px;
+        }
+        
+        .endgame-stats {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .endgame-stat-card {
+            background: #F3F4F6;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .endgame-stat-label {
+            font-size: 1.1em;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .endgame-stat-value {
+            font-family: 'Dosis', sans-serif;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #4F46E5;
+        }
+        
+        @keyframes slideInFromTop {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Jörg's Legal English Adventure</h1>
+            <p class="subtitle">A Choose-Your-Own-Adventure for a German Lawyer</p>
+        </div>
+
+        <div class="main-content">
+            <div class="adventure-area">
+                <h2 class="adventure-header" id="adventureTitle"></h2>
+                <div class="adventure-scenario" id="adventureScenario"></div>
+                <div class="decision-section" id="decisionSection">
+                    <h3>Your Legal Motion:</h3>
+                    <div class="decision-options" id="decisionOptions"></div>
+                </div>
+            </div>
+
+            <div class="user-controls">
+                <div class="adventure-dashboard" id="adventureDashboard">
+                    <div class="stat-card">
+                        <div class="stat-label">Legal Prowess</div>
+                        <div class="stat-value" id="legalProwessScore">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Social Savvy</div>
+                        <div class="stat-value" id="socialSavvyScore">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Stetson's Lifelines</div>
+                        <div class="stat-value" id="tutorLifelines">3</div>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary" id="startButton" onclick="startGame()">Start Adventure</button>
+                    <button class="btn btn-llm" id="tutorButton" style="display:none;" onclick="requestAdvice()">Request a Tutor's Hint 💡</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for feedback -->
+    <div class="modal-overlay" id="feedbackModalOverlay">
+        <div class="modal-content">
+            <div class="modal-title" id="feedbackModalTitle"></div>
+            <div class="modal-text" id="feedbackModalText"></div>
+            <button class="btn btn-primary" id="nextStageButton" onclick="handleNext()">Next Case</button>
+        </div>
+    </div>
+    
+    <!-- Modal for LLM content -->
+    <div class="modal-overlay" id="llmModalOverlay">
+        <div class="modal-content">
+            <div class="modal-title">Stetson's Legal Counsel</div>
+            <div class="modal-text loading-text" id="llmModalText">Your legal assistant is consulting the library...</div>
+            <div class="llm-advice-content" id="llmAdviceContent"></div>
+            <button class="btn btn-secondary" onclick="closeLlmModal()">Close</button>
+        </div>
+    </div>
+    
+    <!-- Modal for end game -->
+    <div class="modal-overlay" id="endGameModalOverlay">
+        <div class="modal-content">
+            <div class="modal-title">Case Closed! 🎉</div>
+            <div class="modal-text">Jörg has completed his journey! Here is his final performance review based on your choices:</div>
+            <div class="endgame-stats">
+                 <div class="endgame-stat-card">
+                    <div class="endgame-stat-label">Final Legal Prowess</div>
+                    <div class="endgame-stat-value" id="finalLegalProwess"></div>
+                </div>
+                <div class="endgame-stat-card">
+                    <div class="endgame-stat-label">Final Social Savvy</div>
+                    <div class="endgame-stat-value" id="finalSocialSavvy"></div>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 20px; font-style: italic;">Higher scores lead to fewer embarrassing office moments.</p>
+            <button class="btn btn-primary" onclick="startGame()">Restart Adventure</button>
+        </div>
+    </div>
+
+    <script>
+        // Game data and state variables
+        const gameStages = [
+            {
+                title: "The Case of the Mispelled Client",
+                scenario: "Jörg receives an email from an American colleague referring to a key client as 'Mr. Johnson's.' Jörg's records show the client's name is 'Johnson' with no 's'. He needs to clarify this without offending his colleague or the client.",
+                question: "How should Jörg politely and professionally address the discrepancy?",
+                options: [
+                    { text: "Reply-all to the email, stating 'The name is Johnson, not Johnson's. The spelling is important.'", score: { legalProwess: 5, socialSavvy: 0 }, isCorrect: false, explanation: "This is a social disaster! Replying to all is unprofessional and correcting a senior colleague so bluntly is a major faux pas. You need to be diplomatic." },
+                    { text: "Call the colleague and say, 'I'm sorry, I just want to be certain. Is the client’s last name Johnson, spelled J-O-H-N-S-O-N, with no 's' at the end?'", score: { legalProwess: 30, socialSavvy: 30 }, isCorrect: true, explanation: "Excellent choice! This is a polite, direct, and professional way to clarify the name. It shows respect for the colleague and prioritizes accuracy without causing offense." },
+                    { text: "Call the client directly and ask them to spell their name.", score: { legalProwess: 10, socialSavvy: 10 }, isCorrect: false, explanation: "This is an unnecessary step. The client may be confused or offended that the firm doesn't have their name on file correctly. It's better to clarify internally first." },
+                    { text: "Do nothing and hope for the best. After all, what's one extra 's'?", score: { legalProwess: 0, socialSavvy: 0 }, isCorrect: false, explanation: "In legal practice, precision is everything. An incorrect name can have serious consequences. Ignoring the error is a terrible idea." }
+                ]
+            },
+            {
+                title: "The Case of the Missing 'E'",
+                scenario: "Jörg is drafting a contract and wants to use a formal German legal term, 'schuldhaftes Verhalten'. He finds a literal translation, 'guilty behavior'. He also finds the term 'culpable conduct'.",
+                question: "Which English term is more appropriate for a professional legal contract?",
+                options: [
+                    { text: "Use 'guilty behavior' because it's a direct translation and easy to understand.", score: { legalProwess: 5, socialSavvy: 10 }, isCorrect: false, explanation: "This is a common mistake for non-native speakers. While 'guilty behavior' conveys a similar meaning, 'culpable conduct' is the correct and more formal legal term used by English-speaking lawyers. Use of 'guilty behavior' would signal a lack of legal mastery." },
+                    { text: "Just write the German term 'schuldhaftes Verhalten' and assume everyone knows what it means.", score: { legalProwess: 0, socialSavvy: 5 }, isCorrect: false, explanation: "This is a classic 'hope for the best' scenario. In a legal contract, you can't assume a shared understanding. This would create a major contractual ambiguity." },
+                    { text: "Use 'culpable conduct', as it is the correct and specific legal term.", score: { legalProwess: 30, socialSavvy: 30 }, isCorrect: true, explanation: "Correct! 'Culpable conduct' is a precise and widely understood legal term in common law jurisdictions. This shows you have a strong command of legal English." },
+                    { text: "Coin a new term, 'schuldhaftness behavior', and put a footnote explaining it in German.", score: { legalProwess: 0, socialSavvy: 0 }, isCorrect: false, explanation: "This is not a good idea. Inventing terms in a legal document is a recipe for a lawsuit. Stick to established legal terminology." }
+                ]
+            },
+            {
+                title: "The Case of the Coffee Machine",
+                scenario: "Jörg is in the breakroom. An American colleague, a senior partner named Mr. Peterson, says, 'Hey Jörg, how's it hanging?' Jörg, a meticulous lawyer, has never heard this phrase and suspects it's some sort of legal trick.",
+                question: "How should Jörg respond?",
+                options: [
+                    { text: "Stare at the ceiling and say, 'I'm not sure what is 'hanging,' but the ceiling appears to be structurally sound.'", score: { legalProwess: 5, socialSavvy: 5 }, isCorrect: false, explanation: "This is a funny but awkward misinterpretation. It shows a lack of familiarity with common idioms and could make social interactions difficult." },
+                    { text: "Say, 'Danke, and you?'", score: { legalProwess: 10, socialSavvy: 15 }, isCorrect: false, explanation: "This is a passable response, but the use of 'Danke' is inappropriate here, and 'and you?' is a bit too direct. 'How about you?' or 'You as well?' would be better." },
+                    { text: "Respond, 'Pretty good, thanks! How about you?'", score: { legalProwess: 30, socialSavvy: 30 }, isCorrect: true, explanation: "This is the perfect response! It shows you understand the idiom as a greeting, not a literal question, and you respond with natural, friendly conversational English." },
+                    { text: "Immediately get out his phone and Google 'How's it hanging?', ignoring Mr. Peterson.", score: { legalProwess: 0, socialSavvy: 0 }, isCorrect: false, explanation: "This is an extremely rude and socially inept response. A simple, friendly reply is all that's required. Technology should not be a crutch for basic human interaction." }
+                ]
+            },
+            {
+                title: "The Case of the 'I rest my case' T-shirt",
+                scenario: "Jörg has a big court date. He finds a T-shirt for sale online that says 'I REST MY CASE' in large letters. He thinks this is a clever way to show his legal confidence.",
+                question: "What is the best course of action for Jörg?",
+                options: [
+                    { text: "Wear the T-shirt under his suit and reveal it during his closing argument.", score: { legalProwess: 0, socialSavvy: 0 }, isCorrect: false, explanation: "This is a terrible idea. It would be highly unprofessional and disrespectful to the court. Also, revealing a T-shirt during an argument is not an effective legal strategy." },
+                    { text: "Decide the T-shirt is a fun, casual item and wear it on a weekend trip, but not to court.", score: { legalProwess: 30, socialSavvy: 30 }, isCorrect: true, explanation: "This is a brilliant decision! It shows an understanding of context and appropriate dress for different occasions. 'I rest my case' is a common phrase, but its use as a T-shirt slogan has a more casual, humorous connotation." },
+                    { text: "Buy the T-shirt and ask the judge if it's okay to wear it to court.", score: { legalProwess: 5, socialSavvy: 10 }, isCorrect: false, explanation: "While it's good to ask for permission, the judge would almost certainly say no. This would also likely damage Jörg's professional reputation in court." },
+                    { text: "Buy the T-shirt but only wear it to a professional networking event for lawyers, as it's a good conversation starter.", score: { legalProwess: 15, socialSavvy: 15 }, isCorrect: false, explanation: "This is a risky move. While it might be a conversation starter, it could also be perceived as unprofessional or a joke, depending on the audience." }
+                ]
+            }
+        ];
+        
+        const initialLifelines = 3;
+        let currentStageIndex = -1;
+        let selectedOption = null;
+        let score = { legalProwess: 0, socialSavvy: 0, lifelines: initialLifelines };
+        const history = [];
+
+        // DOM Elements
+        const adventureTitleEl = document.getElementById('adventureTitle');
+        const adventureScenarioEl = document.getElementById('adventureScenario');
+        const decisionOptionsEl = document.getElementById('decisionOptions');
+        const startButton = document.getElementById('startButton');
+        const tutorButton = document.getElementById('tutorButton');
+        const legalProwessScoreEl = document.getElementById('legalProwessScore');
+        const socialSavvyScoreEl = document.getElementById('socialSavvyScore');
+        const tutorLifelinesEl = document.getElementById('tutorLifelines');
+        const feedbackModalOverlay = document.getElementById('feedbackModalOverlay');
+        const feedbackModalTitle = document.getElementById('feedbackModalTitle');
+        const feedbackModalText = document.getElementById('feedbackModalText');
+        const llmModalOverlay = document.getElementById('llmModalOverlay');
+        const llmModalText = document.getElementById('llmModalText');
+        const llmAdviceContent = document.getElementById('llmAdviceContent');
+        const endGameModalOverlay = document.getElementById('endGameModalOverlay');
+        const finalLegalProwessEl = document.getElementById('finalLegalProwess');
+        const finalSocialSavvyEl = document.getElementById('finalSocialSavvy');
+
+        function updateScoreDisplay() {
+            legalProwessScoreEl.textContent = score.legalProwess;
+            socialSavvyScoreEl.textContent = score.socialSavvy;
+            tutorLifelinesEl.textContent = score.lifelines;
+            tutorButton.disabled = score.lifelines <= 0;
+        }
+
+        function startGame() {
+            currentStageIndex = 0;
+            score = { legalProwess: 0, socialSavvy: 0, lifelines: initialLifelines };
+            history.length = 0;
+            startButton.style.display = 'none';
+            tutorButton.style.display = 'block';
+            updateScoreDisplay();
+            endGameModalOverlay.style.display = 'none';
+            presentStage();
+        }
+
+        function presentStage() {
+            if (currentStageIndex >= gameStages.length) {
+                endGame();
+                return;
+            }
+
+            const stage = gameStages[currentStageIndex];
+            const shuffledOptions = [...stage.options].sort(() => Math.random() - 0.5);
+            
+            adventureTitleEl.textContent = stage.title;
+            adventureScenarioEl.textContent = stage.scenario;
+            decisionOptionsEl.innerHTML = '';
+            selectedOption = null;
+            
+            tutorButton.disabled = score.lifelines <= 0;
+
+            shuffledOptions.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option-card';
+                optionEl.innerHTML = option.text;
+                optionEl.onclick = () => selectOption(optionEl, option);
+                decisionOptionsEl.appendChild(optionEl);
+            });
+            
+            document.querySelectorAll('.option-card').forEach(el => {
+                el.classList.remove('incorrect', 'selected', 'correct');
+                el.style.pointerEvents = 'auto';
+            });
+        }
+
+        function selectOption(element, option) {
+            document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedOption = option;
+            
+            history.push({
+                stage: gameStages[currentStageIndex].title,
+                decision: option.text,
+                score: option.score
+            });
+            
+            score.legalProwess += option.score.legalProwess;
+            score.socialSavvy += option.score.socialSavvy;
+            updateScoreDisplay();
+            
+            document.querySelectorAll('.option-card').forEach(el => el.style.pointerEvents = 'none');
+            
+            showFeedbackModal(option.explanation);
+            
+            tutorButton.disabled = true;
+        }
+
+        function showFeedbackModal(message) {
+            feedbackModalOverlay.style.display = 'flex';
+            feedbackModalTitle.textContent = selectedOption.isCorrect ? "Motion Sustained! ✅" : "Objection! ⚠️";
+            feedbackModalText.textContent = message;
+        }
+        
+        function handleNext() {
+            feedbackModalOverlay.style.display = 'none';
+            currentStageIndex++;
+            presentStage();
+        }
+
+        function endGame() {
+            let legalProwessResult;
+            if (score.legalProwess >= 100) {
+                legalProwessResult = "Master of the court! Your legal terminology and understanding of English law are impeccable.";
+            } else if (score.legalProwess >= 60) {
+                legalProwessResult = "A capable counsel. You know your way around the law, but there is room to refine your vocabulary.";
+            } else {
+                legalProwessResult = "New to the courthouse. Your legal instincts are sound, but you need to work on the language of the law.";
+            }
+
+            let socialSavvyResult;
+            if (score.socialSavvy >= 100) {
+                socialSavvyResult = "Socialite of the firm! You navigate professional conversations with grace and charm.";
+            } else if (score.socialSavvy >= 60) {
+                socialSavvyResult = "A polite professional. You handle social situations well, but there is room to improve your casual communication.";
+            } else {
+                socialSavvyResult = "The silent partner. You often misunderstood social cues. Keep practicing your small talk!";
+            }
+            
+            finalLegalProwessEl.textContent = legalProwessResult;
+            finalSocialSavvyEl.textContent = socialSavvyResult;
+            
+            endGameModalOverlay.style.display = 'flex';
+            tutorButton.style.display = 'none';
+        }
+
+        async function requestAdvice() {
+            if (score.lifelines <= 0) return;
+            
+            score.lifelines--;
+            updateScoreDisplay();
+            
+            llmModalOverlay.style.display = 'flex';
+            llmModalText.textContent = "Your legal assistant is consulting the library...";
+            llmAdviceContent.innerHTML = '';
+            
+            const stage = gameStages[currentStageIndex];
+            const correctOption = stage.options.find(opt => opt.isCorrect);
+
+            llmModalText.textContent = '';
+            llmAdviceContent.innerHTML = `
+                <h4>Stetson's Legal Counsel:</h4>
+                <p>Always prioritize **professionalism** and **clarity** in legal and formal settings. Think about the most diplomatic and precise way to handle the situation.</p>
+                <p>When in doubt, it's best to use established legal terminology over direct translations or conversational phrases.</p>
+                <div class="option-card correct">${correctOption.text}</div>
+            `;
+            
+            document.querySelectorAll('.option-card').forEach(el => {
+                el.classList.remove('incorrect', 'correct');
+                const isCorrect = el.textContent.trim() === correctOption.text.trim();
+                if (isCorrect) {
+                    el.classList.add('correct');
+                } else {
+                    el.classList.add('incorrect');
+                }
+            });
+            tutorButton.disabled = true;
+        }
+        
+        function closeLlmModal() {
+            llmModalOverlay.style.display = 'none';
+        }
+
+        window.onload = () => {
+             updateScoreDisplay();
+        };
+
+    </script>
+</body>
+</html>
